@@ -1,6 +1,7 @@
 package com.example.arpit.zeensms;
 
 import android.content.Context;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,7 +19,7 @@ public class SMS_Sender {
     static List<String> existingAddress=new ArrayList<String>();
     static List<String> existingWeather=new ArrayList<String>();
 
-    public void getData(String name,String number,String area,String lat,String lon)
+    public String getData(String name,String number,String area,String lat,String lon)
     {
         this.name=name;
         this.number=number;
@@ -27,6 +28,8 @@ public class SMS_Sender {
         this.lon=lon;
 
         dataExists();
+        String message=sendSMS();
+        return message;
     }
 
     public void dataExists()
@@ -36,7 +39,7 @@ public class SMS_Sender {
         {
             existingAddress.add(area);
             //logic to add weather
-            getWeather.getJSON(lat,lon);
+            weather=getWeather.getJSON(lat,lon);
             existingWeather.add(weather);
 
         }
@@ -55,4 +58,11 @@ public class SMS_Sender {
 
     }
 
+    public String sendSMS()
+    {
+        SmsManager sms=SmsManager.getDefault();
+        String message="Weather at "+area+" is "+weather+"\n"+"-Project ZEEN";
+        sms.sendTextMessage(number,null,message,null,null);
+        return message;
+    }
 }

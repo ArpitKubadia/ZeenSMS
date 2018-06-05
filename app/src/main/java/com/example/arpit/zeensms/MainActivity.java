@@ -363,8 +363,9 @@ public class MainActivity extends Activity
             if (values != null) {
                 results.add("Name, Number, Area, Latitude, Longitude");
                 for (List row : values) {
-                    sms_sender.getData(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),row.get(3).toString(),row.get(4).toString());
+                    String message=sms_sender.getData(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),row.get(3).toString(),row.get(4).toString());
                     results.add(row.get(0) + ", " + row.get(1)+", "+ row.get(2)+", "+row.get(3)+", "+row.get(4));
+                    results.add(message);
                 }
             }
             return results;
