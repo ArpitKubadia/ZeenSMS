@@ -17,9 +17,11 @@ public class SMS_Sender {
     }
     GetWeather getWeather=new GetWeather();
 
-    String name,number,area,weather,lat,lon;
+    String name,number,area,lat,lon;
+    String weather[]=new String[2];
     static List<String> existingAddress=new ArrayList<String>();
     static List<String> existingWeather=new ArrayList<String>();
+    static List<String> existingTemp=new ArrayList<String>();
 
     public String getData(String custom_msg,String name,String number,String area,String lat,String lon)
     {
@@ -43,12 +45,14 @@ public class SMS_Sender {
             existingAddress.add(area);
             //logic to add weather
             weather=getWeather.getJSON(lat,lon);
-            existingWeather.add(weather);
+            existingWeather.add(weather[0]);
+            existingTemp.add(weather[1]);
 
         }
         else
         {
-            weather=existingWeather.get(i);
+            weather[0]=existingWeather.get(i);
+            weather[1]=existingTemp.get(i);
         }
         Log.d("ExistingAddress","Size "+existingAddress.size());
 
@@ -67,7 +71,7 @@ public class SMS_Sender {
         String message;
         Log.d("Custom message is",custom_msg);
         if(custom_msg.equals("Enter Custom Message")){
-            message="Weather at "+area+" is "+weather+"\n"+"-Project ZEEN";
+            message="Weather at "+area+": "+weather[0]+"\n"+"Temperature: "+weather[1]+"°C\n\n"+"-Project ZEEN";
         }
         else
             message=custom_msg;
@@ -83,7 +87,7 @@ public class SMS_Sender {
         ArrayList<PendingIntent> deliverList = new ArrayList<>();
         deliverList.add(deliveredPI);
 
-        sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
+        //sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
 
         //sms.sendTextMessage(number,null,message,null,null);
 

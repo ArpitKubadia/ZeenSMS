@@ -14,9 +14,9 @@ import java.net.URL;
 
 public class GetWeather {
     JSONObject data=null;
-    String weather;
+    String weather[]=new String[2];
     String app_id="3d6bbf028a8b03ad66cdab5dd3c35175";
-    public String getJSON(final String lat,final String lon) {
+    public String[] getJSON(final String lat,final String lon) {
 
 
         /*new AsyncTask<Void, Void, Void>() {
@@ -81,8 +81,10 @@ public class GetWeather {
 
     }
 
-    public String parseJSON(){
+    public String[] parseJSON(){
         String main=null;
+        String temp=null;
+        String data_return[]=new String[2];
         if(data!=null){
             try{
                 JSONObject jsonObject=new JSONObject();
@@ -90,15 +92,19 @@ public class GetWeather {
                 JSONArray weather=jsonObject.getJSONArray("weather");
                 if(weather!=null) {
                     JSONObject w=weather.getJSONObject(0);
-                    main=w.getString("main");
-                    Log.d("Main",main);
-
+                    main=w.getString("description");
+                    Log.d("Description",main);
                 }
+                JSONObject main_temp=data.getJSONObject("main");
+                temp=main_temp.getString("temp");
+                data_return[0]=main;
+                data_return[1]=temp;
+
             }catch (final JSONException e) {
                 Log.e("JSONERROR", "Json parsing error: " + e.getMessage());
             }
         };
-        return main;
+        return data_return;
     }
 
 }
