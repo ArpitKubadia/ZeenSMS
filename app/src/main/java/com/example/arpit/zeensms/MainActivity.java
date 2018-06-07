@@ -31,9 +31,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,6 +61,8 @@ public class MainActivity extends Activity
 
     private static final String BUTTON_TEXT = "Call Google Sheets API";
     private static final String PREF_ACCOUNT_NAME = "accountName";
+    String custom_message;
+    private EditText customMsg;
     private static final String[] SCOPES = { SheetsScopes.SPREADSHEETS_READONLY };
 
     /**
@@ -79,6 +83,11 @@ public class MainActivity extends Activity
         ViewGroup.LayoutParams tlp = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
+        customMsg=new EditText(this);
+        customMsg.setEnabled(true);
+        customMsg.setText("Enter Custom Message");
+        activityLayout.addView(customMsg);
+
 
         mCallApiButton = new Button(this);
         mCallApiButton.setText(BUTTON_TEXT);
@@ -360,10 +369,12 @@ public class MainActivity extends Activity
                     .execute();
             List<List<Object>> values = response.getValues();
             SMS_Sender sms_sender=new SMS_Sender(MainActivity.this);
+            custom_message=customMsg.getText().toString();
             if (values != null) {
                 results.add("Name, Number, Area, Latitude, Longitude");
+                Log.d("Custom message is",custom_message);
                 for (List row : values) {
-                    String message=sms_sender.getData(row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),row.get(3).toString(),row.get(4).toString());
+                    String message=sms_sender.getData(custom_message,row.get(0).toString(),row.get(1).toString(),row.get(2).toString(),row.get(3).toString(),row.get(4).toString());
                     results.add(row.get(0) + ", " + row.get(1)+", "+ row.get(2)+", "+row.get(3)+", "+row.get(4));
                     results.add(message);
                 }

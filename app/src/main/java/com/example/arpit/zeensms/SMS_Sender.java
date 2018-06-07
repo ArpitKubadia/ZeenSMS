@@ -1,6 +1,8 @@
 package com.example.arpit.zeensms;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,7 +21,7 @@ public class SMS_Sender {
     static List<String> existingAddress=new ArrayList<String>();
     static List<String> existingWeather=new ArrayList<String>();
 
-    public String getData(String name,String number,String area,String lat,String lon)
+    public String getData(String custom_msg,String name,String number,String area,String lat,String lon)
     {
         this.name=name;
         this.number=number;
@@ -28,7 +30,8 @@ public class SMS_Sender {
         this.lon=lon;
 
         dataExists();
-        String message=sendSMS();
+        Log.d("Custom message 1 is",custom_msg);
+        String message=sendSMS(custom_msg);
         return message;
     }
 
@@ -58,11 +61,32 @@ public class SMS_Sender {
 
     }
 
-    public String sendSMS()
+    public String sendSMS(String custom_msg)
     {
         SmsManager sms=SmsManager.getDefault();
-        String message="Weather at "+area+" is "+weather+"\n"+"-Project ZEEN";
-        sms.sendTextMessage(number,null,message,null,null);
+        String message;
+        Log.d("Custom message is",custom_msg);
+        if(custom_msg.equals("Enter Custom Message")){
+            message="Weather at "+area+" is "+weather+"\n"+"-Project ZEEN";
+        }
+        else
+            message=custom_msg;
+
+        PendingIntent sentPI = PendingIntent.getBroadcast(context, 0, new Intent("SMS_SENT"), 0);
+        PendingIntent deliveredPI = PendingIntent.getBroadcast(context, 0, new Intent("SMS_DELIVERED"), 0);
+
+
+        ArrayList<String> parts = sms.divideMessage(message);
+        ArrayList<PendingIntent> sendList = new ArrayList<>();
+        sendList.add(sentPI);
+
+        ArrayList<PendingIntent> deliverList = new ArrayList<>();
+        deliverList.add(deliveredPI);
+
+        sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
+
+        //sms.sendTextMessage(number,null,message,null,null);
+
         return message;
     }
 }
