@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +67,12 @@ public class SMS_Sender {
     public String sendSMS(String custom_msg)
     {
         SmsManager sms=SmsManager.getDefault();
+        marathiTranslation translation=new marathiTranslation();
         String message;
+        weather[0]=translation.getMarathiTranslation(weather[0]);
         Log.d("Custom message is",custom_msg);
         if(custom_msg.equals("Enter Custom Message")){
-            message="Weather at "+area+": "+weather[0]+"\n"+"Temperature: "+weather[1]+"°C\n\n"+"-Project ZEEN";
+            message=area+" येथे हवामान: "+weather[0]+"\n"+"तापमान: "+weather[1]+"°C\n\n"+"-प्रोजेक्ट ज़ीण";
         }
         else
             message=custom_msg;
@@ -87,7 +88,7 @@ public class SMS_Sender {
         ArrayList<PendingIntent> deliverList = new ArrayList<>();
         deliverList.add(deliveredPI);
 
-        //sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
+        sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
 
         //sms.sendTextMessage(number,null,message,null,null);
 
