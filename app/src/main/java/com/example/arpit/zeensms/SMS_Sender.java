@@ -88,9 +88,8 @@ public class SMS_Sender {
         ArrayList<PendingIntent> deliverList = new ArrayList<>();
         deliverList.add(deliveredPI);
 
-        sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
+        //sms.sendMultipartTextMessage(number, null, parts, sendList, deliverList);
 
-        //sms.sendTextMessage(number,null,message,null,null);
 
         return message;
     }
